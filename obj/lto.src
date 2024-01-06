@@ -3,7 +3,7 @@
 	section	.text,"ax",@progbits
 	public	_update_columns
 _update_columns:
-	ld	hl, -39
+	ld	hl, -45
 	call	__frameset
 	ld	bc, 708
 	ld	iy, (_update_columns.fall_direction)
@@ -16,378 +16,259 @@ _update_columns:
 	pop	de
 	ld	hl, (ix + 6)
 	add	hl, de
-	ld	(ix - 12), hl
-	ld	(ix - 21), iy
+	ld	(ix - 9), hl
+	ld	(ix - 24), iy
 	lea	hl, iy
 	ld	bc, -708
 	call	__imulu
 	push	hl
 	pop	de
-	ld	hl, (ix + 6)
-	push	hl
-	pop	iy
-	add	iy, de
+	ld	bc, (ix + 6)
+	push	bc
+	pop	hl
+	add	hl, de
+	ld	(ix - 15), hl
 	ld	de, 56
-	ld	(ix - 3), hl
+	ld	(ix - 3), bc
 	ld	bc, 0
 BB0_1:
 	push	bc
 	pop	hl
 	or	a, a
 	sbc	hl, de
-	jp	z, BB0_43
+	jp	z, BB0_27
 	push	bc
 	pop	hl
-	ld	de, (ix - 21)
+	ld	de, (ix - 24)
 	add	hl, de
-	ld	(ix - 36), hl
-	ld	(ix - 15), bc
+	ld	(ix - 39), hl
+	ld	(ix - 18), bc
 	push	bc
 	pop	hl
 	or	a, a
 	sbc	hl, de
-	ld	(ix - 33), hl
-	or	a, a
+	ld	(ix - 36), hl
+	ld	de, 0
+	push	de
+	pop	iy
+	scf
 	sbc	hl, hl
-	push	hl
-	pop	de
-	ld	c, h
-	ld	a, c
-	ld	(ix - 9), hl
-	ld	(ix - 24), iy
+	ld	(ix - 6), hl
+	ld	c, d
+	ld	(ix - 12), de
 BB0_3:
-	push	hl
-	pop	bc
+	lea	hl, iy
 	ld	de, 708
 	or	a, a
 	sbc	hl, de
-	jp	z, BB0_42
-	ld	iyl, a
-	ld	(ix - 6), bc
+	jp	z, BB0_26
+	lea	de, iy
 	ld	hl, (ix - 3)
-	add	hl, bc
-	ld	de, (hl)
-	push	de
-	pop	hl
+	add	hl, de
+	ld	hl, (hl)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	a, -1
-	jr	nz, BB0_6
-	ld	a, 0
-BB0_6:
-	ld	l, a
-	rrc	l
-	sbc	hl, hl
-	ld	c, iyl
+	ld	a, 1
+	jp	z, BB0_25
+	ld	(ix - 45), hl
+	ld	(ix - 21), iy
 	bit	0, c
-	ld	(ix - 18), hl
-	jp	nz, BB0_17
-	push	de
-	pop	hl
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
 	ld	hl, 0
-	ld	iy, (ix - 3)
-	jp	z, BB0_18
-	ld	hl, (ix - 6)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	ld	hl, 0
-	push	hl
-	pop	bc
-	ld	a, h
-	ld	(ix - 18), hl
-	jr	z, BB0_18
-	ld	hl, (ix - 36)
-	ld	bc, 56
-	or	a, a
-	sbc	hl, bc
-	ld	hl, (ix - 9)
-	dec	hl
 	ld	(ix - 30), hl
-	jp	nc, BB0_37
-	ld	bc, (ix - 6)
-	ld	iy, (ix - 12)
-	add	iy, bc
-	ld	bc, 56
-	ld	hl, (iy - 6)
-	ld	iy, (ix - 3)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jp	nz, BB0_37
-	ld	bc, (ix - 6)
-	ld	hl, (ix - 12)
-	add	hl, bc
-	ld	hl, (hl)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	ld	a, -1
-	jr	z, BB0_13
-	ld	a, 0
-BB0_13:
-	bit	0, a
+	ld	b, 1
+	dec	hl
+	jp	nz, BB0_20
 	ld	hl, (ix - 21)
-	jr	nz, BB0_15
-	or	a, a
-	sbc	hl, hl
-BB0_15:
-	ld	(ix - 39), hl
-	ld	l, a
-	rrc	l
-	sbc	hl, hl
-	ld	(ix - 18), hl
-	bit	0, a
-	jp	nz, BB0_41
-	ld	hl, (ix - 33)
-	ld	bc, 56
+	add	hl, bc
 	or	a, a
 	sbc	hl, bc
+	ld	hl, 0
+	ld	(ix - 30), hl
+	ld	b, h
+	jp	z, BB0_20
 	ld	hl, (ix - 39)
-	jr	nc, BB0_18
-	jp	BB0_38
-BB0_17:
-	or	a, a
-	sbc	hl, hl
-	ld	iy, (ix - 3)
-BB0_18:
-	ld	bc, (ix - 6)
-	add	iy, bc
-	bit	0, (iy + 5)
-	jr	nz, BB0_22
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	nz, BB0_21
-	bit	0, a
-	jr	z, BB0_22
-BB0_21:
-	ld	bc, (ix - 15)
-	add	hl, bc
-	ld	(ix - 30), de
-	ld	de, (ix - 9)
-	push	hl
-	pop	bc
-	ld	hl, (ix - 18)
-	add	hl, de
-	ld	(ix - 18), hl
-	push	bc
-	pop	hl
-	ld	bc, 708
-	call	__imulu
-	push	hl
-	pop	bc
-	ld	hl, (ix + 6)
-	add	hl, bc
-	ex	de, hl
-	ld	hl, (ix - 18)
-	ld	bc, 6
-	call	__imulu
-	push	hl
-	pop	bc
-	ex	de, hl
-	add	hl, bc
-	ex	de, hl
-	ld	hl, (ix - 30)
-	lea	bc, iy
-	push	de
-	pop	iy
-	ld	(iy), hl
-	ld	(iy + 5), 1
-	ld	de, (ix - 6)
-	ld	hl, (ix - 3)
-	add	hl, de
-	ld	de, 0
-	ld	(hl), de
-	push	bc
-	pop	iy
-	ld	(iy + 5), d
-	ld	c, 1
-	jr	BB0_26
-BB0_22:
-	ld	(iy + 5), 0
-	push	de
-	pop	hl
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	ld	c, 1
-	ld	a, c
-	jr	z, BB0_27
-	ld	hl, (ix - 15)
-	add	hl, bc
-	or	a, a
-	sbc	hl, bc
-	jr	nz, BB0_28
-	ld	de, (ix - 6)
-	ld	iy, (ix + 6)
-	add	iy, de
-	ld	(iy + 3), 1
-BB0_25:
-	ld	c, 0
-BB0_26:
-	ld	a, c
-BB0_27:
-	ld	hl, (ix - 9)
-	inc	hl
-	ld	(ix - 9), hl
-	ld	de, 6
-	ld	hl, (ix - 6)
-	add	hl, de
-	ld	iy, (ix - 24)
-	jp	BB0_3
-BB0_28:
-	ld	(ix - 30), de
-	ld	de, (ix - 6)
-	push	de
-	pop	bc
-	ld	iy, (ix - 3)
-	lea	hl, iy
-	add	hl, bc
-	ld	bc, -705
-	add	hl, bc
-	bit	0, (hl)
-	jr	z, BB0_30
-	push	de
-	pop	bc
-	lea	hl, iy
-	add	hl, bc
-	ld	bc, -708
-	add	hl, bc
-	ld	hl, (hl)
-	ld	bc, (ix - 30)
-	or	a, a
-	sbc	hl, bc
-	ld	l, 1
-	jr	z, BB0_34
-BB0_30:
-	push	de
-	pop	bc
-	ld	iy, (ix - 3)
-	add	iy, bc
-	bit	0, (iy - 3)
-	ld	iy, (ix - 3)
-	ld	l, 0
-	jr	z, BB0_34
-	add	iy, de
-	ld	hl, (iy - 6)
-	ld	de, (ix - 30)
+	ld	de, 56
 	or	a, a
 	sbc	hl, de
-	ld	l, -1
-	jr	z, BB0_33
-	ld	l, 0
-BB0_33:
-	ld	iy, (ix - 3)
-	ld	de, (ix - 6)
-BB0_34:
+	jr	nc, BB0_15
+	ld	de, (ix - 21)
+	ld	iy, (ix - 9)
 	add	iy, de
-	ld	a, l
-	and	a, 1
-	ld	(iy + 3), a
-	bit	0, l
-	ld	c, 0
-	ld	a, c
-	ld	de, (ix - 30)
-	jr	z, BB0_27
-	ld	hl, (ix - 15)
-	ld	bc, 55
+	ld	de, 56
+	ld	hl, (iy - 6)
+	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	c, b
-	ld	a, c
-	jp	nz, BB0_27
-	ld	hl, (ix + 6)
-	push	hl
-	push	de
+	jr	nz, BB0_15
+	ld	de, (ix - 21)
 	ld	hl, (ix - 9)
-	push	hl
-	ld	hl, 55
-	push	hl
-	call	_clear_from
-	pop	hl
-	pop	hl
-	pop	hl
-	pop	hl
-	jp	BB0_25
-BB0_37:
-	ld	hl, (ix - 33)
+	add	hl, de
+	ld	hl, (hl)
+	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	hl, 0
-	push	hl
-	pop	bc
-	ld	a, h
-	ld	(ix - 18), hl
-	jp	nc, BB0_18
-BB0_38:
+	ld	b, -1
+	jr	z, BB0_11
+	ld	b, 0
+BB0_11:
+	bit	0, b
+	ld	hl, (ix - 24)
+	ld	(ix - 30), hl
+	jr	nz, BB0_13
+	or	a, a
+	sbc	hl, hl
+	ld	(ix - 30), hl
+BB0_13:
+	ld	a, b
+	rrc	a
+	sbc	hl, hl
+	bit	0, b
+	jp	nz, BB0_20
+	ld	(ix - 33), hl
+	ld	hl, (ix - 36)
+	ld	de, 56
+	or	a, a
+	sbc	hl, de
 	ld	hl, (ix - 33)
+	ld	de, (ix - 6)
+	jr	c, BB0_17
+	jr	BB0_20
+BB0_15:
+	ld	hl, (ix - 36)
+	or	a, a
+	sbc	hl, de
+	ld	hl, 0
+	ld	(ix - 30), hl
+	ld	b, h
+	jr	nc, BB0_20
+	ld	de, (ix - 12)
+	dec	de
+BB0_17:
+	ld	hl, (ix - 36)
 	ld	bc, 708
 	call	__imulu
-	push	hl
+	push	de
 	pop	bc
+	push	hl
+	pop	de
 	ld	iy, (ix + 6)
-	add	iy, bc
-	ld	hl, (ix - 30)
+	add	iy, de
+	push	bc
+	pop	hl
 	ld	bc, 6
 	call	__imulu
 	push	hl
-	pop	bc
-	add	iy, bc
+	pop	de
+	add	iy, de
 	ld	hl, (iy)
-	ld	iy, (ix - 3)
+	ld	iy, 0
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	ld	bc, 0
-	push	bc
-	pop	hl
-	ld	a, b
-	ld	(ix - 18), bc
-	jp	nz, BB0_18
-	ld	bc, (ix - 6)
-	ld	hl, (ix - 24)
-	add	hl, bc
+	ld	(ix - 30), iy
+	lea	de, iy
+	ex	de, hl
+	jr	nz, BB0_20
+	ld	de, (ix - 21)
+	ld	hl, (ix - 15)
+	add	hl, de
 	ld	hl, (hl)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
 	ld	hl, 0
-	push	hl
-	pop	bc
-	ld	a, h
-	ld	(ix - 18), hl
-	jp	nz, BB0_18
-	ld	bc, (ix - 27)
-	ld	a, 1
+	ld	(ix - 30), hl
+	ld	b, h
+	jr	nz, BB0_20
+	ld	hl, (ix - 27)
+	ld	(ix - 30), hl
+	ld	b, 1
 	scf
 	sbc	hl, hl
-	ld	(ix - 18), hl
-	push	bc
-	pop	hl
-	jp	BB0_18
-BB0_41:
-	ld	hl, (ix - 39)
-	jp	BB0_18
-BB0_42:
-	ld	bc, (ix - 15)
+BB0_20:
+	ld	(ix - 33), hl
+	ld	de, (ix - 21)
+	ld	iy, (ix - 3)
+	add	iy, de
+	ld	(ix - 42), iy
+	ld	a, (iy + 5)
+	xor	a, 1
+	ld	c, a
+	ld	hl, (ix - 30)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	ld	a, -1
+	jr	nz, BB0_22
+	ld	a, 0
+BB0_22:
+	or	a, b
+	ld	l, a
+	ld	a, c
+	and	a, l
+	bit	0, a
+	jr	z, BB0_24
+	ld	de, (ix - 18)
+	ld	hl, (ix - 30)
+	add	hl, de
+	ld	de, (ix - 6)
+	ld	iy, (ix - 33)
+	add	iy, de
+	inc	iy
+	ld	(ix - 33), iy
+	ld	bc, 708
+	call	__imulu
+	push	hl
+	pop	de
+	ld	iy, (ix + 6)
+	add	iy, de
+	ld	hl, (ix - 33)
+	ld	bc, 6
+	call	__imulu
+	push	hl
+	pop	de
+	add	iy, de
+	ld	hl, (ix - 45)
+	ld	(iy), hl
+	ld	(iy + 5), 1
+	ld	iy, 0
+	ld	de, (ix - 21)
+	ld	hl, (ix - 3)
+	add	hl, de
+	ld	(hl), iy
+BB0_24:
+	ld	iy, (ix - 42)
+	ld	(iy + 5), 0
+	ld	iy, (ix - 21)
+BB0_25:
+	ld	hl, (ix - 12)
+	inc	hl
+	ld	(ix - 12), hl
+	ld	hl, (ix - 6)
+	inc	hl
+	ld	(ix - 6), hl
+	ld	de, 6
+	add	iy, de
+	ld	c, a
+	jp	BB0_3
+BB0_26:
+	ld	bc, (ix - 18)
 	inc	bc
 	ld	hl, 708
 	ex	de, hl
-	ld	hl, (ix - 12)
+	ld	hl, (ix - 9)
 	add	hl, de
-	ld	(ix - 12), hl
-	add	iy, de
+	ld	(ix - 9), hl
+	ld	hl, (ix - 15)
+	add	hl, de
+	ld	(ix - 15), hl
 	ld	hl, (ix - 3)
 	add	hl, de
 	ld	(ix - 3), hl
 	ld	de, 56
 	jp	BB0_1
-BB0_43:
+BB0_27:
 	ld	hl, (ix - 27)
 	ld	(_update_columns.fall_direction), hl
 	ld	sp, ix
