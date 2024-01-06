@@ -30,8 +30,12 @@ int main() {
 }
 
 
-pixel_t pixels[56][118];
+pixel_t pixels[GAME_WIDTH][GAME_HEIGHT];
+// pixel_t old_pixels[GAME_WIDTH][GAME_HEIGHT];
 
+int placer_x = 30;
+int placer_y = 80;
+pixel_color placer_type = RED;
 
 void begin() {
     // for (int i = 0; i < 56; i++) {
@@ -51,10 +55,6 @@ bool step() {
     if (kb_Data[6] & kb_Clear)
         return false;
 
-    static int placer_x = 0;
-    static int placer_y = 0;
-
-    static pixel_color placer_type = red;
 
     if (kb_Data[7] & kb_Up)
         placer_y++;
@@ -67,8 +67,77 @@ bool step() {
         placer_x--;
 
 
-    if (kb_Data[6] & kb_Enter)
-        pixels[placer_x][placer_y].color = placer_type;
+    if (kb_Data[6] & kb_Enter) {
+        if (placer_type == RED) {
+            for (int ix = 0; ix <= 12; ix++) {
+                for (int iy = 4; iy >= 0; iy--) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+
+            for (int ix = 0; ix <= 4; ix++) {
+                for (int iy = -1; iy >= -5; iy--) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+        } else if (placer_type == YELLOW) {
+            for (int ix = 0; ix < 8; ix++) {
+                for (int iy = 0; iy < 8; iy++) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+        } else if (placer_type == BLUE) {
+            for (int ix = 4; ix < 8; ix++) {
+                for (int iy = 0; iy < 4; iy++) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+            for (int ix = 0; ix < 12; ix++) {
+                for (int iy = 4; iy < 8; iy++) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+        } else if (placer_type == GREEN) {
+            for (int ix = 4; ix < 12; ix++) {
+                for (int iy = 0; iy < 4; iy++) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+            for (int ix = 0; ix < 8; ix++) {
+                for (int iy = 4; iy < 8; iy++) {
+                    int x_point = placer_x + ix;
+                    int y_point = placer_y + iy;
+                    if (x_point >= GAME_WIDTH || x_point < 0)
+                        continue;
+                    pixels[x_point][y_point].color = placer_type;
+                }
+            }
+        }
+    }
 
     static bool lsecond, lalpha;
     bool second = kb_Data[1] & kb_2nd;
@@ -90,21 +159,29 @@ bool step() {
 }
 
 void draw() {
-    for (int x = 0; x < 56; x++) { // another big ahh double for loop
-        for (int y = 0; y < 118; y++) {
+
+    for (int x = 0; x < GAME_WIDTH; x++) { // another big ahh double for loop
+        for (int y = 0; y < GAME_HEIGHT; y++) {
             pixel_t* pixel = &pixels[x][y];
 
-            if (pixel->was_cleared) {
-                pixel->was_cleared = false;
-                gfx_SetColor(5); // white
+            // if (pixel->was_cleared) {
+            //     pixel->was_cleared = false;
+            //     gfx_SetColor(5); // white
             
-            } else
-                gfx_SetColor(pixel->color); // color indecies 1-4 are the pixel colors (maybe add variation later)
+            // } else
 
-            gfx_Rectangle_NoClip(x * 2, GFX_LCD_HEIGHT - y * 2, 2, 2);
+            gfx_SetColor(pixel->color); // color indecies 1-4 are the pixel colors (maybe add variation later)
+
+            // if (pixel->color != NONE) // this might actually be slower than just drawing nones as black
+            gfx_Rectangle_NoClip(x * 2 + 2, GFX_LCD_HEIGHT - (y * 2 + 4/*?*/), 2, 2);
+            
             
         }
     }
+
+    gfx_SetColor(placer_type);
+    gfx_Rectangle_NoClip(placer_x * 2 + 2, GFX_LCD_HEIGHT - (placer_y * 2 + 4), 2, 2);
+
 }
 
 void end() {

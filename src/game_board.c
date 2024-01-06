@@ -1,40 +1,60 @@
+#include <string.h>
+#include <debug.h>
 #include "game_board.h"
 
+#define can_move_side(fd) (y > 0 && (x + fd >= 0 && x + fd < GAME_WIDTH))
+
 // bouta be slow as hell
-void update_columns(pixel_t pixels[56][118]) {
+void update_columns(pixel_t pixels[GAME_WIDTH][GAME_HEIGHT]) {
+    // memcpy(old_pixels, pixels, sizeof (pixel_t) * 56 * 118);
     static int fall_direction = 1; // 1 for right, -1 for left
 
-    for (int x = 0; x < 56; x++) {
+    for (int x = 0; x < GAME_WIDTH; x++) {
 
         bool below_is_empty = false; // there is something stopping them at the bottom
 
-        for (int y = 0; y < 118; y++) { // there is no way this will ever be fast ever
+        for (int y = 0; y < GAME_HEIGHT; y++) { // there is no way this will ever be fast ever
 
-            pixel_t* pixel = &pixels[x][y];
-
+            pixel_t* pixel = &/* old_ */pixels[x][y];
+            
             int x_change = 0;
-            int y_change = -1;
+            int y_change = 0;
 
-            // if the one below to the side is free then the one above that should also be free (hopefully)
-            // but like maybe not if it hasnt updated it yet (to the right)
-            if (!below_is_empty && pixels[x + fall_direction][y - 1].color == none) // is this slower?
-                x_change = fall_direction;
-            
-            else if (!below_is_empty && pixels[x - fall_direction][y - 1].color == none)
-                x_change = -fall_direction;
-            
-            else
-                y_change = 0;
+            if (pixel->color != NONE) {
+                if (below_is_empty)
+                    y_change = -1;
 
-            if (x_change != 0 || y_change != 0) {
-                pixels[x + x_change][y + y_change].color = pixel->color;
-                pixel->color = none;
+                // if the one below to the side is free then the one above it should also be free (hopefully)
+                // but like maybe not if it hasnt updated it yet (to the right) not anymore hahaha
+                else if (can_move_side(fall_direction) && pixels[x + fall_direction][y - 1].color == NONE && pixels[x + fall_direction][y].color == NONE) {
+                    x_change = fall_direction;
+                    y_change = -1;
+
+                } else if (can_move_side(-fall_direction) && pixels[x - fall_direction][y - 1].color == NONE && pixels[x - fall_direction][y].color == NONE) {
+                    x_change = -fall_direction;
+                    y_change = -1;
+
+                }
             }
+
             
-            below_is_empty = pixels[x][y].color == none;
+            if (!pixel->has_moved && (x_change != 0 || y_change != 0)) {
+                /* pixel_t* new_pixel = &pixels[x][y]; */
+
+                dbg_printf("Moved from (%i, %i) to (%i, %i)\n", x, y, x + x_change, y + y_change);
+
+                pixels[x + x_change][y + y_change].color = pixel->color;
+                pixels[x + x_change][y + y_change].has_moved = true;
+                /* new_ */pixel->color = NONE;
+            }
+
+            pixel->has_moved = false;
+                
+
+            below_is_empty = pixels[x][y].color == NONE;
 
             // now maybe check for l/r connection idk how tf im sposta do that
-            if (pixel->color == none) continue;
+            if (pixel->color == NONE) continue;
             
             if (x == 0) {
                 pixel->is_connected_left = true;
@@ -50,7 +70,7 @@ void update_columns(pixel_t pixels[56][118]) {
                 (pixels[x][y - 1].is_connected_left && pixels[x][y - 1].color == pixel->color) /*|| 
                 (pixels[x][y + 1].is_connected_left && pixels[x][y + 1].t == pixel->t)*/;
 
-            if (pixel->is_connected_left && x == 53)
+            if (pixel->is_connected_left && x >= GAME_WIDTH - 1)
                 clear_from(x, y, pixel->color, pixels);
             
         }
@@ -61,13 +81,13 @@ void update_columns(pixel_t pixels[56][118]) {
 }
 
 // this will be slow but that should be okay hopefully
-void clear_from(int x, int y, pixel_color color, pixel_t pixels[56][118]) {
+void clear_from(int x, int y, pixel_color color, pixel_t pixels[GAME_WIDTH][GAME_HEIGHT]) {
     pixel_t* pixel = &pixels[x][y];
 
     if (pixel->color != color)
         return;
 
-    pixel->color = none;
+    pixel->color = NONE;
     pixel->was_cleared = true;
 
     // should have to check right side because of goofy overhang things that could happen
